@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="controller"/>
+
+    <bean id="clientDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/Bank"/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="clientDataSource"/>
+        <property name="mappingResources">
+            <list>
+                <value>client.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=org.hibernate.dialect.HSQLDialect
+                hibernate.show_sql=true
+            </value>
+        </property>
+    </bean>
+
+    <bean id="clientService" class="services.ClientService">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="clientController" class="controller.ClientController">
+        <property name="clientService" ref="clientService"/>
+    </bean>
+
+    <bean id="idValidator" class="controller.IdValidator">
+        <property name="clientService" ref="clientService"/>
+    </bean>
+</beans>
