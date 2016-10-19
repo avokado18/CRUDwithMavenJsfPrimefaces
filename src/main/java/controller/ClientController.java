@@ -26,6 +26,7 @@ public class ClientController implements Serializable{
     private int accNumber;
     private double balance;
     private boolean canEdit = false;
+
     private String message = "Add client";
 
     public String getMessage() {
@@ -109,6 +110,18 @@ public class ClientController implements Serializable{
         clientService.deleteClient(id);
         return "";
     }
+    public String addClick(){
+        id = 0;
+        surname = null;
+        name = null;
+        patronymic = null;
+        birthday = null;
+        accNumber = 0;
+        balance = 0;
+        canEdit = false;
+        message = "Add client";
+        return "";
+    }
     public String editClick(int id){
         message = "Edit Client";
         canEdit = true;
@@ -140,7 +153,7 @@ public class ClientController implements Serializable{
         balance = 0;
         canEdit = false;
         message = "Add client";
-        return null;
+        return "";
     }
     private void addClient(Client client){
         clientService.addClient(client);

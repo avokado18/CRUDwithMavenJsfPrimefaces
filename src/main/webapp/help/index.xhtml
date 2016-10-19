@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=primefaces-glass-x" />
+    <p:commandButton value="Show" onclick="PF('dlg1').show();" type="button" />
+
+    <p:dialog header="Header" widgetVar="dlg1" showEffect="pop">
+        <h:outputText value="What we do in life, echoes in eternity!" />
+    </p:dialog>
+</ui:composition>
