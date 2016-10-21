@@ -2,139 +2,63 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core">
-
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:crud="http://java.sun.com/jsf/composite/CRUD">
 <h:head>
 
 </h:head>
 <h:body>
-    <h2>All clients</h2>
-    <h:form>
-        <div class="table-responsive">
-            <p:dataTable tableStyleClass="table table-striped" value="#{clientController.allClients}" var="client">
-                <p:column headerText="Id">
-                    <p:outputLabel value="#{client.getId()}" />
-                </p:column>
-                <p:column headerText="Surname">
-                    <p:outputLabel value="#{client.getSurname()}" />
-                </p:column>
-                <p:column headerText="Name">
-                    <p:outputLabel value="#{client.getName()}" />
-                </p:column>
-                <p:column headerText="Patronymic">
-                    <p:outputLabel value="#{client.getPatronymic()}" />
-                </p:column>
-                <p:column headerText="Birthday">
-                    <p:outputLabel value="#{client.getBirthday()}" >
-                        <f:convertDateTime pattern="dd.MM.yyyy" timeZone="Europe/Moscow"/>
-                    </p:outputLabel>
-                </p:column>
-                <p:column headerText="Account number" size="20">
-                    <p:outputLabel value="#{client.getAccNumber()}" />
-                </p:column>
-                <p:column headerText="Balance">
-                    <p:outputLabel value="#{client.getBalance()}" />
-                </p:column>
-                <p:column headerText="Edit">
-                    <p:commandButton
-                            value="edit"
-                            action="#{clientController.editClick(client.getId())}"
-                            onclick="PF('dlg').show()"
-                            ajax="false"/>
-                </p:column>
-                <p:column headerText="Delete">
-                    <p:commandButton
-                            value="delete"
-                            action="#{clientController.deleteClient(client.getId())}"
-                            ajax="false"/>
-                </p:column>
-            </p:dataTable>
-        </div>
-        <p:commandButton value="ADD" onclick="PF('dlg').show()" actionListener="#{clientController.addClick}"/>
+    <h:form id="myform">
+        <h2>All clients</h2>
+        <p:dataTable value="#{clientController.allClients}" var="client">
+            <p:column headerText="Id">
+                <p:outputLabel value="#{client.id}" />
+            </p:column>
+            <p:column headerText="Surname">
+                <p:outputLabel value="#{client.surname}" />
+            </p:column>
+            <p:column headerText="Name">
+                <p:outputLabel value="#{client.name}" />
+            </p:column>
+            <p:column headerText="Patronymic">
+                <p:outputLabel value="#{client.patronymic}" />
+            </p:column>
+            <p:column headerText="Birthday">
+                <p:outputLabel value="#{client.birthday}" >
+                    <f:convertDateTime pattern="dd.MM.yyyy" timeZone="Europe/Moscow"/>
+                </p:outputLabel>
+            </p:column>
+            <p:column headerText="Account number" size="20">
+                <p:outputLabel value="#{client.accNumber}" />
+            </p:column>
+            <p:column headerText="Balance">
+                <p:outputLabel value="#{client.balance}" />
+            </p:column>
+            <p:column headerText="Edit">
+                <p:commandButton
+                        value="edit"
+                        action="#{clientController.editClick(client)}"
+                        ajax="false"/>
+            </p:column>
+            <p:column headerText="Delete">
+                <p:commandButton value="delete" action="#{clientController.deleteClient(client)}" update="myform" process="@this">
+                    <p:confirm header="Confirmation" message="Are you sure?"/>
+                </p:commandButton>
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" update="myform" process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no"/>
+                </p:confirmDialog>
+            </p:column>
+        </p:dataTable>
     </h:form>
-    <p:dialog header="#{clientController.message}" widgetVar="dlg"
-              resizable="false" position="center center" appendToBody="true">
-        <h:form>
-            <h2>#{clientController.message}</h2>
-            <table>
-                <tr>
-                    <td>ID:</td>
-                    <td>
-                        <p:inputText id="id" size="20" value="#{clientController.id}" disabled="#{clientController.canEdit}">
-                            <f:validator binding="#{idValidator}"/>
-                        </p:inputText>
-                        <h:message for="id" styleClass="error" style="color: red"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Surname:</td>
-                    <td>
-                        <p:inputText id="surname" size="20" value="#{clientController.surname}">
-                            <f:validateRegex pattern="^[A-Z][a-z]+$"/>
-                        </p:inputText>
-                        <h:message for="surname" styleClass="error" style="color: red"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Name:</td>
-                    <td>
-                        <p:inputText id="name" size="20" value="#{clientController.name}">
-                            <f:validateRegex pattern="^[A-Z][a-z]+$"/>
-                        </p:inputText>
-                        <h:message for="name" styleClass="error" style="color: red"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Patronymic:</td>
-                    <td>
-                        <p:inputText id="patronymic" size="20" value="#{clientController.patronymic}">
-                            <f:validateRegex pattern="^[A-Z][a-z]+$"/>
-                        </p:inputText>
-                        <h:message for="patronymic" styleClass="error" style="color: red"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Birthday:</td>
-                    <td>
-                        <p:inputText id="birthday" size="20" value="#{clientController.birthday}">
-                            <f:validator validatorId="dateValidator"/>
-                            <f:convertDateTime pattern="dd.MM.yyyy" timeZone="Europe/Moscow"/>
-                        </p:inputText>
-                        <h:message for="birthday" styleClass="error" style="color: red"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Account number:</td>
-                    <td>
-                        <p:inputText id="accNum" size="20" value="#{clientController.accNumber}" >
-                            <f:validateLongRange minimum="0"/>
-                        </p:inputText>
-                        <h:message for="accNum" styleClass="error" style="color: red"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Balance:</td>
-                    <td>
-                        <p:inputText id="balance" size="20" value="#{clientController.balance}" >
-                            <f:validateLongRange minimum="0"/>
-                        </p:inputText>
-                        <h:message for="balance" styleClass="error" style="color: red"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p:commandButton
-                                value="save"
-                                action="#{clientController.saveClient()}"
-                                ajax="false"/>
-                    </td>
-                </tr>
-            </table>
-        </h:form>
-    </p:dialog>
-    </h:body>
+        <p:commandButton id="dialog" value="Add client" onclick="PF('dlg').show();"/>
+        <p:dialog id="myDialog" widgetVar="dlg" visible="#{facesContext.validationFailed}" header="#{clientController.message}"  modal="true">
+            <h:form id="form">
+                <crud:addEditForm client="#{clientController.client}"/>
+            </h:form>
+        </p:dialog>
+</h:body>
 </html>
 
 

@@ -1,6 +1,7 @@
 package controller;
 
 import models.Client;
+import org.primefaces.context.RequestContext;
 import services.ClientService;
 
 import javax.faces.bean.ManagedBean;
@@ -18,85 +19,25 @@ public class ClientController implements Serializable{
         this.clientService = clientService;
     }
 
-    private int id;
-    private String surname;
-    private String name;
-    private String patronymic;
-    private Date birthday;
-    private int accNumber;
-    private double balance;
+    private Client client = new Client();
     private boolean canEdit = false;
-
     private String message = "Add client";
 
+    public Client getClient() {
+        return client;
+    }
+    public void setClient(Client client) {
+        this.client = client;
+    }
     public String getMessage() {
         return message;
     }
-
     public void setMessage(String message) {
         message = message;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public int getAccNumber() {
-        return accNumber;
-    }
-
-    public void setAccNumber(int accNumber) {
-        this.accNumber = accNumber;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
     public boolean isCanEdit() {
         return canEdit;
     }
-
     public void setCanEdit(boolean canEdit) {
         this.canEdit = canEdit;
     }
@@ -106,53 +47,36 @@ public class ClientController implements Serializable{
         return clients;
 
     }
-    public String deleteClient(int id) {
-        clientService.deleteClient(id);
+    public String deleteClient(Client client) {
+        clientService.deleteClient(client.getId());
         return "";
     }
-    public String addClick(){
-        id = 0;
-        surname = null;
-        name = null;
-        patronymic = null;
-        birthday = null;
-        accNumber = 0;
-        balance = 0;
+    public String cancelClick(){
+        client = new Client();
         canEdit = false;
         message = "Add client";
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('dlg').hide();");
         return "";
     }
-    public String editClick(int id){
+    public String editClick(Client oldClient){
+        client = oldClient;
         message = "Edit Client";
         canEdit = true;
-        Client client = clientService.getClientById(id);
-        this.id = id;
-        surname = client.getSurname();
-        name = client.getName();
-        patronymic = client.getPatronymic();
-        birthday = client.getBirthday();
-        accNumber = client.getAccNumber();
-        balance = client.getBalance();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('dlg').show();");
         return "";
     }
     public String saveClient() {
-        Client client = new Client(id, surname, name, patronymic, birthday, accNumber, balance);
-        System.out.println(client);
         if (canEdit){
             editClient(client);
         }
         else {
             addClient(client);
         }
-        id = 0;
-        surname = null;
-        name = null;
-        patronymic = null;
-        birthday = null;
-        accNumber = 0;
-        balance = 0;
-        canEdit = false;
+        client = new Client();
         message = "Add client";
+        canEdit = false;
         return "";
     }
     private void addClient(Client client){

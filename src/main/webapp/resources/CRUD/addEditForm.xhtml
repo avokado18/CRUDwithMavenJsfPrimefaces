@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:cc="http://java.sun.com/jsf/composite">
+    <cc:interface>
+        <cc:attribute name="client" type="models.Client"/>
+    </cc:interface>
+    <cc:implementation>
+        <table>
+            <tr>
+                <td>ID:</td>
+                <td>
+                    <p:inputText id="id" value="#{cc.attrs.client.id}" disabled="#{clientController.canEdit}" required="true">
+                        <f:validator binding="#{idValidator}"/>
+                    </p:inputText>
+                    <h:message for="id" styleClass="error" style="color: red"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Surname:</td>
+                <td>
+                    <p:inputText id="surname" value="#{cc.attrs.client.surname}" required="true">
+                        <f:validateRegex pattern="^[A-Z][a-z]+$"/>
+                    </p:inputText>
+                    <h:message for="surname" styleClass="error" style="color: red"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Name:</td>
+                <td>
+                    <p:inputText id="name" value="#{cc.attrs.client.name}" required="true">
+                        <f:validateRegex pattern="^[A-Z][a-z]+$"/>
+                    </p:inputText>
+                    <h:message for="name" styleClass="error" style="color: red"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Patronymic:</td>
+                <td>
+                    <p:inputText id="patronymic" value="#{cc.attrs.client.patronymic}">
+                        <f:validateRegex pattern="^[A-Z][a-z]+$"/>
+                    </p:inputText>
+                    <h:message for="patronymic" styleClass="error" style="color: red"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Birthday:</td>
+                <td>
+                    <p:calendar id="birthday" value="#{cc.attrs.client.birthday}" required="true">
+                        <f:validator validatorId="dateValidator"/>
+                        <f:convertDateTime pattern="dd.MM.yy" timeZone="Europe/Moscow"/>
+                    </p:calendar>
+                    <h:message for="birthday" styleClass="error" style="color: red"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Account number:</td>
+                <td>
+                    <p:inputText id="accNum" value="#{cc.attrs.client.accNumber}" required="true">
+                        <f:validateLongRange minimum="0"/>
+                    </p:inputText>
+                    <h:message for="accNum" styleClass="error" style="color: red"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Balance:</td>
+                <td>
+                    <p:inputText id="balance" value="#{cc.attrs.client.balance}" required="true">
+                        <f:validateLongRange minimum="0"/>
+                    </p:inputText>
+                    <h:message for="balance" styleClass="error" style="color: red"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p:commandButton
+                            id="btnSave"
+                            value="Save"
+                            action="#{clientController.saveClient()}"
+                            ajax="false"/>
+                </td>
+                <td>
+                    <p:commandButton
+                            id="btnCanc"
+                            value="Cancel"
+                            action="#{clientController.cancelClick()}"
+                            update="myDialog" process="@this">
+                        <p:resetInput target="form" />
+                    </p:commandButton>
+                </td>
+            </tr>
+        </table>
+    </cc:implementation>
+</ui:composition>
